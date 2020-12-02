@@ -4,9 +4,6 @@ var state;
 var user;
 var karen;
 var maga;
-var userSprite;
-var karenSprite;
-var magaSprite;
 var heartCounter;
 var hearts;
 var colors;
@@ -19,29 +16,34 @@ function preload() {
   //karen=loadImage("media/karenChar.png");
   // maga=loadImage("media/magaChar.png");
   //mask=loadImage("media/mask.png");
+  myFont=loadFont("assets/RetroGaming.ttf");
 }
 
 function setup() {
   createCanvas(displayWidth * 2, displayHeight * 2);
-  fam= new Group();
-  characters = new Group();
+  fam = new Group();
   obstacles = new Group();
   masks = new Group();
   colorPuzzle = new Group();
   movers = new Group();
   sliders = new Group();
-  fam1=createSprite(width-450,50,30,30); //initializes family members display
+  magas = new Group();
+  karens = new Group();
+  cough = new Group();
+  safeSpot = createSprite(75, height / 2, 150, 150);
+  safeSpot.shapeColor = color(150, 150, 0);
+  fam1 = createSprite(width - 450, 50, 30, 30); //initializes family members display
   fam.add(fam1);
-  fam2=createSprite(width-510,50,30,30);
+  fam2 = createSprite(width - 510, 50, 30, 30);
   fam.add(fam2);
-  fam3=createSprite(width-570,50,30,30);
+  fam3 = createSprite(width - 570, 50, 30, 30);
   fam.add(fam3);
-  fam4=createSprite(width-630,50,30,30);
+  fam4 = createSprite(width - 630, 50, 30, 30);
   fam.add(fam4);
-  fam5=createSprite(width-690,50,30,30);
+  fam5 = createSprite(width - 690, 50, 30, 30);
   fam.add(fam5);
-  for (let i=0; i<5; i++){
-    fam[i].shapeColor=color(0,0,200);
+  for (let i = 0; i < 5; i++) {
+    fam[i].shapeColor = color(0, 0, 200);
   }
   heart1 = createSprite(width - 350, 50, 30, 30); //initializes hearts display
   heart1.shapeColor = color(250, 100, 100);
@@ -50,6 +52,7 @@ function setup() {
   heart3 = createSprite(width - 230, 50, 30, 30);
   heart3.shapeColor = color(250, 100, 100);
   hearts = [heart1, heart2, heart3];
+
   box1 = createSprite(width / 2, height / 2, width - 800, 100); //creates boundaries/obstacles
   obstacles.add(box1);
   box2 = createSprite(width / 2, height / 2 + 150, 100, height - 300);
@@ -104,15 +107,16 @@ function setup() {
   obstacles.add(box26);
   for (let i = 0; i < 26; i++) {
     obstacles[i].shapeColor = color(0);
+    obstacles[i].setDefaultCollider();
   }
-//   color1=new ColorPuzzle(0,400);
-//   colorPuzzle.add(color1);
-//   color2=new ColorPuzzle(1,350);
-//   colorPuzzle.add(color2);
-//   color3=new ColorPuzzle(2,300);
-//   colorPuzzle.add(color3);
-//   color4=new ColorPuzzle(3,250);
-//   colorPuzzle.add(color4);
+  //   color1=new ColorPuzzle(0,400);
+  //   colorPuzzle.add(color1);
+  //   color2=new ColorPuzzle(1,350);
+  //   colorPuzzle.add(color2);
+  //   color3=new ColorPuzzle(2,300);
+  //   colorPuzzle.add(color3);
+  //   color4=new ColorPuzzle(3,250);
+  //   colorPuzzle.add(color4);
   color1 = createSprite(580, 400, 40, 40); //creates the color puzzle components
   color1.shapeColor = color(200, 0, 0);
   colorPuzzle.add(color1);
@@ -161,15 +165,42 @@ function setup() {
   userSprite.shapeColor = color(0, 0, 200);
   userSprite.setDefaultCollider();
   //userSprite.addImage(user);
-  karenSprite = createSprite(width - 100, 300, 50, 50); //creates karen enemy
-  karenSprite.shapeColor = color(200, 0, 0);
-  karenSprite.setVelocity(-2, 0);
-  karenSprite.setDefaultCollider();
+  karen1 = createSprite(width / 4 + 100, 50, 50, 50); //creates karen enemy
+  karen1.setSpeed(2, 90);
+  karens.add(karen1);
+  karen2 = createSprite(width / 2 - 200, height / 2 - 100, 50, 50);
+  karen2.setSpeed(2, 270);
+  karens.add(karen2);
+  karen3=createSprite(1100,150,50,50);
+  karen3.setSpeed(2,0);
+  karens.add(karen3);
+  karen4=createSprite(100,height/2+100,50,50);
+  karen4.setSpeed(2,0);
+  karens.add(karen4);
+  karen5=createSprite(width/2-100,height-50,50,50);
+  karen5.setSpeed(2,180);
+  karens.add(karen5);
+  karen6=createSprite(width/2-100,height/2+100,50,50);
+  karen6.setSpeed(2,270);
+  karens.add(karen6);
+  karen7=createSprite(100,height-100,50,50);
+  karen7.setSpeed(2,90);
+  karens.add(karen7);
+  for(let i=0; i<7; i++){
+    karens[i].setDefaultCollider();
+    karens[i].shapeColor=color(200,0,0);
+  }
   //karenSprite.addImage(karen);
-  magaSprite = createSprite(100, height / 2 + 150, 50, 50); //creates maga enemy
-  magaSprite.shapeColor = color(200, 0, 0);
-  magaSprite.setVelocity(2, 0);
-  magaSprite.setDefaultCollider();
+  maga1 = createSprite(width / 2, 150, 50, 50); //creates maga enemy
+  magas.add(maga1);
+  maga2 = createSprite(50, height- 100, 50, 50);
+  magas.add(maga2);
+  maga3 = createSprite(width - 200, height / 2, 50, 50);
+  magas.add(maga3);
+  for(let i=0; i<3;i++){
+    magas[i].setDefaultCollider();
+    magas[i].shapeColor=color(255,0,0);
+  }
   //magaSprite.addImage(maga);
   mask1 = createSprite(width / 2 + 650, height / 2 + 520, 50, 50); //creates masks
   // maskImage=image(mask,width-200, height/2);
@@ -181,28 +212,26 @@ function setup() {
   masks.add(mask3);
   mask4 = createSprite(width - 150, 200, 50, 50);
   masks.add(mask4);
-  mask5 = createSprite(width / 2 + 145, height - 70, 50, 50);
+  mask5 = createSprite(width - 200, height / 2, 50, 50);
   mask5.visible = false;
   masks.add(mask5);
   for (let i = 0; i < 5; i++) {
     masks[i].shapeColor = color(150, 150, 220);
   }
-  characters.add(karenSprite);
-  characters.add(magaSprite);
-  characters.add(userSprite);
-  // characters.add(maskSprite);
-  heartCounter = 2;
+  heartCounter = 3;
+  state=1;
 }
 
 function draw() {
+  if(state===1){
   timeStart = millis(); //starts timer
-  background(255); 
+  background(255);
   fill(255); //draws top right display
   stroke(0);
   strokeWeight(4);
   rect(width - 742, 2, 740, 100);
-  line(width-400,0, width-400, 100);
-  line(width-180,0,width-180,100);
+  line(width - 400, 0, width - 400, 100);
+  line(width - 180, 0, width - 180, 100);
   fill(0);
   timer();
   karenMove();
@@ -210,20 +239,23 @@ function draw() {
   userMove();
   collision();
   doColorPuzzle();
-  // if(state===1){
-  //     drawSprites(level1);
-  // }
-  // if (state===2){
-  //     drawSprites(level2);
-  // }
+  doMovePuzzle();
   drawSprites();
+  }
+  else if(state===2){
+    fill(250,0,0);
+    textFont(myFont);
+    textSize(120);
+    text("Game Over", width/2-400, height/2-100);
+  }
 }
 
-function timer() { //tracks time elapsed
+function timer() {
+  //tracks time elapsed
   min = floor(timeStart / 60000);
   sec = floor(timeStart / 1000);
   if (sec >= 60) {
-    sec -= 60;
+    sec -= 60*min;
   }
   fill(0);
   textSize(30);
@@ -234,22 +266,78 @@ function timer() { //tracks time elapsed
   }
 }
 
-function karenMove() { //creates karens path
-  if (karenSprite.position.x > width - 50) {
-    karenSprite.velocity.x *= -1;
-  } else if (karenSprite.position.x < 500) {
-    karenSprite.velocity.x *= -1;
+function karenMove() {
+  //creates karens path
+  if (karen1.collide(box1)) {
+    karen1.setSpeed(2, 270);
   }
-}
-function magaMove() { //creates maga path
-  if (magaSprite.position.x > width - 500) {
-    magaSprite.velocity.x *= -1;
-  } else if (magaSprite.position.x < 50) {
-    magaSprite.velocity.x *= -1;
+  if (karen1.collide(box21)) {
+    karen1.setSpeed(2, 90);
+  }
+  if (karen2.collide(box1)) {
+    karen2.setSpeed(2, 270);
+  }
+  if (karen2.collide(box21)) {
+    karen2.setSpeed(2, 90);
+  }
+  if(karen3.collide(box4)){
+    karen3.setSpeed(2,0);
+  }
+  if(karen3.collide(box22)){
+    karen3.setSpeed(2,180);
+  }
+  if(karen4.collide(box2)){
+    karen4.setSpeed(2,180);
+  }
+  if(karen4.collide(box24)){
+    karen4.setSpeed(2,0);
+  }
+  if(karen5.collide(box2)){
+    karen5.setSpeed(2,180);
+  }
+  if(karen5.collide(box24)){
+    karen5.setSpeed(2,0);
+  }
+  if(karen6.collide(box1)){
+    karen6.setSpeed(2,90);
+  }
+  if(karen6.collide(box23)){
+    karen6.setSpeed(2,270);
+  }
+  if(karen7.collide(safeSpot)){
+    karen7.setSpeed(2,90);
+  }
+  if(karen7.collide(box23)){
+    karen7.setSpeed(2,270);
   }
 }
 
-function userMove() { //controls user movement
+function magaMove() {
+  //creates maga path
+  maga1.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
+  maga1.maxSpeed = 2.4;
+  maga2.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
+  maga2.maxSpeed = 2.4;
+  maga3.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
+  maga3.maxSpeed = 2.4;
+  if(second()===10 || second()===20){
+    createCough(maga1.position.x,maga1.position.y);
+  }
+}
+
+function createCough(x,y){
+  for(let i; i<15;i++){
+  let j=random(5,15);
+  let a=createSprite(x,y,j,j);
+  a.setSpeed(random(1,3),random(0,360));
+  a.shapeColor=color(50,200,50,60);
+  a.life=40;
+  cough.add(a);
+  }
+}
+
+function userMove() {
+  //controls user movement
   if (keyIsDown(LEFT_ARROW)) {
     userSprite.position.x -= 5;
   }
@@ -264,8 +352,7 @@ function userMove() { //controls user movement
   }
 }
 
-function collision() { //details object interactions
-  userSprite.displace(sliders);
+function doMovePuzzle(){
   if (slider1.collide(mover1) === true) {
     mover1.remove();
     slider1.remove();
@@ -283,73 +370,109 @@ function collision() { //details object interactions
     slider4.remove();
     mask5.visible = true;
   }
-//   userSprite.overlap(colorPuzzle, doColorPuzzle);
-  characters.collide(obstacles);
+}
+
+function collision() {
+  //details object interactions
+  userSprite.displace(sliders);
+  userSprite.overlap(safeSpot);
+  userSprite.collide(obstacles);
+  magas.collide(safeSpot);
+  magas.collide(magas);
+  magas.collide(obstacles);
+  karens.collide(obstacles);
   sliders.collide(obstacles);
-  if (userSprite.overlap(karenSprite) || userSprite.overlap(magaSprite)) {
+
+  //   userSprite.overlap(colorPuzzle, doColorPuzzle);
+  
+  if (userSprite.collide(karens) || userSprite.collide(magas)) {
     userSprite.position.x = 50;
     userSprite.position.y = height / 2;
-    hearts[heartCounter].remove();
+    hearts[heartCounter-1].remove();
     heartCounter--;
+    if(heartCounter===0){
+      clearScreen();
+    }
   }
   if (userSprite.overlap(mask1)) {
     mask1.remove();
-    fam1.shapeColor=color(150,150,220);
+    fam1.shapeColor = color(150, 150, 220);
   }
   if (userSprite.overlap(mask2)) {
     mask2.remove();
-    fam2.shapeColor=color(150,150,220);
+    fam2.shapeColor = color(150, 150, 220);
   }
   if (userSprite.overlap(mask3)) {
     mask3.remove();
-    fam3.shapeColor=color(150,150,220);
+    fam3.shapeColor = color(150, 150, 220);
   }
   if (userSprite.overlap(mask4)) {
     mask4.remove();
-    fam4.shapeColor=color(150,150,220);
+    fam4.shapeColor = color(150, 150, 220);
   }
   if (userSprite.overlap(mask5)) {
     mask5.remove();
-    fam5.shapeColor=color(150,150,220);
+    fam5.shapeColor = color(150, 150, 220);
   }
 }
 
-function doColorPuzzle() { //mechanics of the color puzzle component
-    color1Count=0;
-    color2Count=1;
-    color3Count=2;
-    color4Count=3;
-  if (userSprite.collide(color1) === true) {
+function clearScreen(){
+  clear();
+      obstacles.removeSprites();
+      magas.removeSprites();
+      karens.removeSprites();
+      sliders.removeSprites();
+      colorPuzzle.removeSprites();
+      masks.removeSprites();
+      movers.removeSprites();
+      fam.removeSprites();
+      safeSpot.remove();
+      userSprite.remove();
+      state=2;
+}
+
+function doColorPuzzle() {
+  //mechanics of the color puzzle component
+  color1Count = 0;
+  color2Count = 1;
+  color3Count = 2;
+  color4Count = 3;
+  if (userSprite.collide(color1)===true) {
     color1Count++;
     if (color1Count > 3) {
       color1Count = 0;
     }
     color1.shapeColor = colors[color1Count];
-  } else if (userSprite.collide(color2) === true) {
+  }
+   if (userSprite.collide(color2) === true) {
     color2Count++;
     if (color2Count > 3) {
-      color2Count = color2Count - 4;
+      color2Count = 0;
     }
     color2.shapeColor = colors[color2Count];
-  } else if (userSprite.collide(color3) === true) {
+  } if (userSprite.collide(color3) === true) {
     color3Count++;
     if (color3Count > 3) {
-      color3Count = color3Count - 4;
+      color3Count = 0;
     }
     color3.shapeColor = colors[color3Count];
-  } else if (userSprite.collide(color4) === true) {
+  } if (userSprite.collide(color4) === true) {
     color4Count++;
     if (color4Count > 3) {
-      color4Count = color4Count - 4;
+      color4Count = 0;
     }
     color4.shapeColor = colors[color4Count];
   }
   if (
-    color1.shapeColor === colors[2] &&
-    color2.shapeColor === colors[2] &&
-    color3.shapeColor === colors[2] &&
-    color4.shapeColor === colors[2]
+    color1.shapeColor===colors[1] &&
+    color2.shapeColor===colors[2] &&
+    color3.shapeColor===colors[3] &&
+    color4.shapeColor===colors[0]
   ) {
-    colorPuzzle.remove();
+    color1.position.y-=200;
+    color2.position.y-=150;
+    color3.position.y-=100;
+    color4.position.y-=50;
+    colorPuzzle.removeSprites();
   }
 }
