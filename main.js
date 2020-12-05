@@ -30,42 +30,54 @@ var h1;
 var h2;
 var h3;
 var bricks;
-
+var newCases;
+var url;
+var data;
 
 function preload() {
-  user=loadImage('media/userChar.png');
-  karen=loadImage("media/karenChar.png");
-  maga=loadImage("media/magaChar.png");
-  trumpFlag=loadImage("media/trumpFlag.png");
-  mask=loadImage("media/mask.png");
-  recycle=loadImage("media/recycle.png");
-  masked=loadImage("media/maskedChar.png");
-  backgroundImg=loadImage("media/background.png")
-  b1=loadImage("media/b1.png");
-  b2=loadImage("media/b2.png");
-  b3=loadImage("media/b3.png");
-  b4=loadImage("media/b4.png");
-  b5=loadImage("media/b5.png");
-  b6=loadImage("media/b6.png");
-  b7=loadImage("media/b7.png");
-  b8=loadImage("media/b8.png");
-  b9=loadImage("media/b9.png");
-  b10=loadImage("media/b10.png");
-  b11=loadImage("media/b11.png");
-  b12=loadImage("media/b12.png");
-  b13=loadImage("media/b13.png");
-  b14=loadImage("media/b14.png");
-  b15=loadImage("media/b15.png");
-  b16=loadImage("media/b16.png");
-  b17=loadImage("media/b17.png");
-  myFont=loadFont("assets/RetroGaming.ttf");
-  
+  user = loadImage('media/userChar.png');
+  karen = loadImage("media/karenChar.png");
+  maga = loadImage("media/magaChar.png");
+  trumpFlag = loadImage("media/trumpFlag.png");
+  confederateFlag = loadImage("media/confederateFlag.png");
+  blueLivesFlag = loadImage("media/blueLivesFlag.png");
+  dontTreadFlag = loadImage("media/dontTreadFlag.png");
+  mask = loadImage("media/mask.png");
+  recycle = loadImage("media/recycle.png");
+  masked = loadImage("media/maskedChar.png");
+  backgroundImg = loadImage("media/background.png")
+  b1 = loadImage("media/b01.png");
+  b2 = loadImage("media/b002.png");
+  b3 = loadImage("media/b3.png");
+  b4 = loadImage("media/b4.png");
+  b5 = loadImage("media/b5.png");
+  b6 = loadImage("media/b6.png");
+  b7 = loadImage("media/b7.png");
+  b8 = loadImage("media/b8.png");
+  b9 = loadImage("media/b9.png");
+  b10 = loadImage("media/b10.png");
+  b11 = loadImage("media/b11.png");
+  b12 = loadImage("media/b12.png");
+  b13 = loadImage("media/b13.png");
+  b14 = loadImage("media/b14.png");
+  b15 = loadImage("media/b15.png");
+  b16 = loadImage("media/b16.png");
+  b17 = loadImage("media/b17.png");
+  border1 = loadImage("media/border1.png");
+  border2 = loadImage("media/border2.png");
+  car = loadImage("media/car.png");
+  sign = loadImage("media/sign.png");
+  unmaskedSmall = loadImage("media/userCharSmall.png");
+  maskedSmall = loadImage("media/maskedCharSmall.png");
+  myFont = loadFont("assets/RetroGaming.ttf");
+  url = "https://api.covidtracking.com/v1/us/current.json";
+  data = loadJSON(url);
 }
 
 function setup() {
   createCanvas(1200, 800);
-  SCENE_W=displayWidth*2;
-  SCENE_H=displayHeight*2;
+  SCENE_W = displayWidth * 2;
+  SCENE_H = displayHeight * 2;
   obstacles = new Group();
   masks = new Group();
   colorPuzzle = new Group();
@@ -73,128 +85,106 @@ function setup() {
   sliders = new Group();
   magas = new Group();
   karens = new Group();
-  cough = new Group();
-  safeSpot = createSprite(75, SCENE_H / 2, 150, 150);
-  safeSpot.shapeColor = color(150, 150, 0);
-  hearts = [heart1,heart2, heart3];
 
-  box1 = createSprite(SCENE_W / 2, SCENE_H / 2, SCENE_W - 800, 100); //creates boundaries/obstacles
-  box1.addImage(b1);
-  box1.setCollider("rectangle",0,0,2080,100);
-  obstacles.add(box1);
-  box2 = createSprite(SCENE_W / 2, SCENE_H / 2 + 150, 100, SCENE_H - 300);
-  box2.addImage(b2);
-  box2.setCollider("rectangle",0,0,100,1500);
-  obstacles.add(box2);
-  box3 = createSprite(300, 500, 600, 100);
-  box3.addImage(b3);
-  box3.setCollider("rectangle",0,0,600,100);
-  obstacles.add(box3);
-  box4 = createSprite(550, 100, 100, 200);
-  box4.addImage(b4);
-  box4.setCollider("rectangle",0,0,100,200);
-  obstacles.add(box4);
-  box5 = createSprite(SCENE_W - 500, SCENE_H / 2 - 150, 1000, 50);
-  box5.addImage(b5);
-  box5.setCollider("rectangle",0,0,1000,50);
-  obstacles.add(box5);
-  box6 = createSprite(SCENE_W / 2 + 550, SCENE_H / 2 - 275, 1000, 50);
-  box6.addImage(b5);
-  box6.setCollider("rectangle",0,0,1000,50);
-  obstacles.add(box6);
-  box7 = createSprite(SCENE_W - 500, SCENE_H / 2 - 400, 1000, 50);
-  box7.addImage(b5);
-  box7.setCollider("rectangle",0,0,1000,50);
-  obstacles.add(box7);
-  box8 = createSprite(SCENE_W / 2 + 550, SCENE_H / 2 - 525, 1000, 50);
-  box8.addImage(b5);
-  box8.setCollider("rectangle",0,0,1000,50);
-  obstacles.add(box8);
-  box9 = createSprite(SCENE_W - 500, SCENE_H / 2 - 650, 1000, 50);
-  box9.addImage(b5);
-  box9.setCollider("rectangle",0,0,1000,50);
-  obstacles.add(box9);
-  box10 = createSprite(SCENE_W - 600, SCENE_H - 25, 1200, 50);
-  box10.addImage(b6);
-  box10.setCollider("rectangle",0,0,1200,50);
-  obstacles.add(box10);
-  box11 = createSprite(SCENE_W / 2 + 265, SCENE_H / 2 + 525, 50, 650);
-  box11.addImage(b7);
-  box11.setCollider("rectangle",0,0,50,650);
-  obstacles.add(box11);
-  box12 = createSprite(SCENE_W / 2 + 790, SCENE_H / 2 + 175, 1100, 50);
-  box12.addImage(b8);
-  box12.setCollider("rectangle",0,0,1100,50);
-  obstacles.add(box12);
-  box13 = createSprite(SCENE_W - 125, SCENE_H - 425, 50, 550);
-  box13.addImage(b9);
-  box13.setCollider("rectangle",0,0,50,550);
-  obstacles.add(box13);
-  box14 = createSprite(SCENE_W - 600, SCENE_H - 175, 900, 50);
-  box14.addImage(b10);
-  box14.setCollider("rectangle",0,0,900,50);
-  obstacles.add(box14);
-  box15 = createSprite(SCENE_W / 2 + 410, SCENE_H - 375, 50, 450);
-  box15.addImage(b11);
-  box15.setCollider("rectangle",0,0,50,450);
-  obstacles.add(box15);
-  box16 = createSprite(SCENE_W - 655, SCENE_H / 2 + 325, 800, 50);
-  box16.addImage(b12);
-  box16.setCollider("rectangle",0,0,800,50);
-  obstacles.add(box16);
-  box17 = createSprite(SCENE_W - 280, SCENE_H - 450, 50, 300);
-  box17.addImage(b13);
-  box17.setCollider("rectangle",0,0,50,300);
-  obstacles.add(box17);
-  box18 = createSprite(SCENE_W - 580, SCENE_H - 320, 650, 50);
-  box18.addImage(b14);
-  box18.setCollider("rectangle",0,0,650,50);
-  obstacles.add(box18);
-  box19 = createSprite(SCENE_W / 2 + 560, SCENE_H - 385, 50, 180);
-  box19.addImage(b15);
-  box19.setCollider("rectangle",0,0,50,180);
-  obstacles.add(box19);
-  box20 = createSprite(SCENE_W - 655, SCENE_H - 450, 500, 50);
-  box20.addImage(b16);
-  box20.setCollider("rectangle",0,0,500,50);
-  obstacles.add(box20);
-  box21 = createSprite(SCENE_W / 2, 0, SCENE_W, 1);
-  obstacles.add(box21);
-  box22 = createSprite(SCENE_W, SCENE_H / 2, 1, SCENE_H);
-  obstacles.add(box22);
-  box23 = createSprite(SCENE_W / 2, SCENE_H, SCENE_W, 1);
-  obstacles.add(box23);
-  box24 = createSprite(0, SCENE_H / 2, 1, SCENE_H);
-  obstacles.add(box24);
-  box25 = createSprite(650, SCENE_H - 400, 900, 50);
-  box25.addImage(b10);
-  box25.setCollider("rectangle",0,0,900,50);
-  obstacles.add(box25);
-  box26 = createSprite(650, SCENE_H - 400, 50, 600);
-  box26.addImage(b17);
-  box26.setCollider("rectangle",0,0,50,600);
-  obstacles.add(box26);
-  
-  //   color1=new ColorPuzzle(0,400);
-  //   colorPuzzle.add(color1);
-  //   color2=new ColorPuzzle(1,350);
-  //   colorPuzzle.add(color2);
-  //   color3=new ColorPuzzle(2,300);
-  //   colorPuzzle.add(color3);
-  //   color4=new ColorPuzzle(3,250);
-  //   colorPuzzle.add(color4);
-  color1 = createSprite(580, 400, 40, 40); //creates the color puzzle components
-  color1.shapeColor = color(200, 0, 0);
-  colorPuzzle.add(color1);
-  color2 = createSprite(580, 350, 40, 40);
-  color2.shapeColor = color(230, 230, 0);
-  colorPuzzle.add(color2);
-  color3 = createSprite(580, 300, 40, 40);
-  color3.shapeColor = color(0, 200, 0);
-  colorPuzzle.add(color3);
-  color4 = createSprite(580, 250, 40, 40);
-  color4.shapeColor = color(0, 0, 200);
-  colorPuzzle.add(color4);
+  safeSpot = createSprite(75, SCENE_H / 2);
+  safeSpot.addImage(car);
+  safeSpot.setCollider("rectangle", 0, 0, 150, 129);
+  townSign = createSprite(75, SCENE_H / 2 - 150);
+  townSign.addImage(sign);
+  townSign.setCollider("rectangle", 0, 0, 150, 130);
+  hearts = [heart1, heart2, heart3];
+
+  box1 = new Box(SCENE_W / 2, SCENE_H / 2, b1, 2080, 100);
+  box1.create();
+  obstacles.add(box1.boxSprite);
+  box2 = new Box(SCENE_W / 2, SCENE_H / 2 + 150, b2, 100, 1500);
+  box2.create();
+  obstacles.add(box2.boxSprite);
+  box3 = new Box(300, 500, b3, 600, 100);
+  box3.create();
+  obstacles.add(box3.boxSprite);
+  box4 = new Box(550, 100, b4, 100, 200);
+  box4.create();
+  obstacles.add(box4.boxSprite);
+  box5 = new Box(SCENE_W - 500, SCENE_H / 2 - 150, b5, 1000, 50);
+  box5.create();
+  obstacles.add(box5.boxSprite);
+  box6 = new Box(SCENE_W / 2 + 550, SCENE_H / 2 - 275, b5, 1000, 50);
+  box6.create();
+  obstacles.add(box6.boxSprite);
+  box7 = new Box(SCENE_W - 500, SCENE_H / 2 - 400, b5, 1000, 50);
+  box7.create();
+  obstacles.add(box7.boxSprite);
+  box8 = new Box(SCENE_W / 2 + 550, SCENE_H / 2 - 525, b5, 1000, 50);
+  box8.create();
+  obstacles.add(box8.boxSprite);
+  box9 = new Box(SCENE_W - 500, SCENE_H / 2 - 650, b5, 1000, 50);
+  box9.create();
+  obstacles.add(box9.boxSprite);
+  box10 = new Box(SCENE_W - 600, SCENE_H - 25, b6, 1200, 50);
+  box10.create();
+  obstacles.add(box10.boxSprite);
+  box11 = new Box(SCENE_W / 2 + 265, SCENE_H / 2 + 525, b7, 50, 650);
+  box11.create();
+  obstacles.add(box11.boxSprite);
+  box12 = new Box(SCENE_W / 2 + 790, SCENE_H / 2 + 175, b8, 1100, 50);
+  box12.create();
+  obstacles.add(box12.boxSprite);
+  box13 = new Box(SCENE_W - 125, SCENE_H - 425, b9, 50, 550);
+  box13.create();
+  obstacles.add(box13.boxSprite);
+  box14 = new Box(SCENE_W - 600, SCENE_H - 175, b10, 900, 50);
+  box14.create();
+  obstacles.add(box14.boxSprite);
+  box15 = new Box(SCENE_W / 2 + 410, SCENE_H - 375, b11, 50, 450);
+  box15.create();
+  obstacles.add(box15.boxSprite);
+  box16 = new Box(SCENE_W - 655, SCENE_H / 2 + 325, b12, 800, 50);
+  box16.create();
+  obstacles.add(box16.boxSprite);
+  box17 = new Box(SCENE_W - 280, SCENE_H - 450, b13, 50, 300);
+  box17.create();
+  obstacles.add(box17.boxSprite);
+  box18 = new Box(SCENE_W - 580, SCENE_H - 320, b14, 650, 50);
+  box18.create();
+  obstacles.add(box18.boxSprite);
+  box19 = new Box(SCENE_W / 2 + 560, SCENE_H - 385, b15, 50, 180);
+  box19.create();
+  obstacles.add(box19.boxSprite);
+  box20 = new Box(SCENE_W - 655, SCENE_H - 450, b16, 500, 50);
+  box20.create();
+  obstacles.add(box20.boxSprite);
+  box21 = new Box(SCENE_W / 2, 0, border1, SCENE_W, 1);
+  box21.create();
+  obstacles.add(box21.boxSprite);
+  box22 = new Box(SCENE_W, SCENE_H / 2, border2, 1, SCENE_H);
+  box22.create();
+  obstacles.add(box22.boxSprite);
+  box23 = new Box(SCENE_W / 2, SCENE_H, border1, SCENE_W, 1);
+  box23.create();
+  obstacles.add(box23.boxSprite);
+  box24 = new Box(0, SCENE_H / 2, border2, 1, SCENE_H);
+  box24.create();
+  obstacles.add(box24.boxSprite);
+  box25 = new Box(650, SCENE_H - 400, b10, 900, 50);
+  box25.create();
+  obstacles.add(box25.boxSprite);
+  box26 = new Box(650, SCENE_H - 400, b17, 50, 600);
+  box26.create();
+  obstacles.add(box26.boxSprite);
+
+  color1 = new CPuzzle(580, 400, 200, 0, 0);
+  color1.create();
+  colorPuzzle.add(color1.colorSprite);
+  color2 = new CPuzzle(580, 350, 230, 230, 0);
+  color2.create();
+  colorPuzzle.add(color2.colorSprite);
+  color3 = new CPuzzle(580, 300, 0, 200, 0);
+  color3.create();
+  colorPuzzle.add(color3.colorSprite);
+  color4 = new CPuzzle(580, 250, 0, 0, 200);
+  color4.create();
+  colorPuzzle.add(color4.colorSprite);
   colors = [
     color(200, 0, 0),
     color(230, 230, 0),
@@ -202,176 +192,177 @@ function setup() {
     color(0, 0, 200),
   ];
 
-  mover1 = createSprite(SCENE_W - 150, 325, 100, 100); //creates the movement puzzle components
-  mover1.addImage(recycle);
-  mover1.setCollider("rectangle",0,0,100,100);
-  movers.add(mover1);
-  slider1 = createSprite(SCENE_W / 2 + 400, 320, 55, 55);
-  slider1.addImage(trumpFlag);
-  slider1.setCollider("rectangle",0,0,100,50);
-  // slider1.shapeColor = color(90, 20, 0);
-  sliders.add(slider1);
-  mover2 = createSprite(SCENE_W / 2 + 200, 450, 100, 100);
-  mover2.addImage(recycle);
-  mover2.setCollider("rectangle",0,0,100,100);
-  movers.add(mover2);
-  slider2 = createSprite(SCENE_W - 350, 445, 55, 55);
-  slider2.addImage(trumpFlag);
-  slider2.setCollider("rectangle",0,0,100,50);
-  // slider2.shapeColor = color(90, 20, 0);
-  sliders.add(slider2);
-  mover3 = createSprite(SCENE_W - 150, 575, 100, 100);
-  mover3.addImage(recycle);
-  mover3.setCollider("rectangle",0,0,100,100);
-  movers.add(mover3);
-  slider3 = createSprite(SCENE_W / 2 + 400, 570, 55, 55);
-  slider3.addImage(trumpFlag);
-  slider3.setCollider("rectangle",0,0,100,50);
-  // slider3.shapeColor = color(90, 20, 0);
-  sliders.add(slider3);
-  mover4 = createSprite(SCENE_W / 2 + 200, 700, 100, 100);
-  mover4.addImage(recycle);
-  mover4.setCollider("rectangle",0,0,100,100);
-  movers.add(mover4);
-  slider4 = createSprite(SCENE_W - 350, 695, 55, 55);
-  slider4.addImage(trumpFlag);
-  slider4.setCollider("rectangle",0,0,100,50);
-  // slider4.shapeColor = color(90, 20, 0);
-  sliders.add(slider4);
-  // for(let i=0; i<5; i++){
-  //   sliders[i].setCollider("rectangle",0,0,150,100);
-  //   sliders[i].addImage(trumpFlag);
-  // }
+  mover1 = new Mover(SCENE_W - 150, 325);
+  mover1.create();
+  movers.add(mover1.moverSprite);
+  mover2 = new Mover(SCENE_W / 2 + 200, 450);
+  mover2.create();
+  movers.add(mover2.moverSprite);
+  mover3 = new Mover(SCENE_W - 150, 575);
+  mover3.create();
+  movers.add(mover3.moverSprite);
+  mover4 = new Mover(SCENE_W / 2 + 200, 700);
+  mover4.create();
+  movers.add(mover4.moverSprite);
 
-  // userSprite = createSprite(50, SCENE_H / 2, 50, 50); //creates user
-  // userSprite.shapeColor = color(0, 0, 200);
-  userSprite=createSprite(50,SCENE_H/2),50,50;
+  slider1 = new Slider(SCENE_W / 2 + 400, 320, trumpFlag);
+  slider1.create();
+  sliders.add(slider1.sliderSprite);
+  slider2 = new Slider(SCENE_W - 350, 445, confederateFlag);
+  slider2.create();
+  sliders.add(slider2.sliderSprite);
+  slider3 = new Slider(SCENE_W / 2 + 400, 570, dontTreadFlag);
+  slider3.create();
+  sliders.add(slider3.sliderSprite);
+  slider4 = new Slider(SCENE_W - 350, 695, blueLivesFlag);
+  slider4.create();
+  sliders.add(slider4.sliderSprite);
+
+  userSprite = createSprite(50, SCENE_H / 2), 50, 50;
   userSprite.addImage(user);
-  userSprite.setCollider("circle",0,0,25);
-  //userSprite.addImage(user);
-  karen1 = createSprite(SCENE_W / 4 + 100, 50, 50, 50); //creates karen enemy
-  karen1.setSpeed(2, 90);
-  karens.add(karen1);
-  karen2 = createSprite(SCENE_W / 2 - 200, SCENE_H / 2 - 100, 50, 50);
-  karen2.setSpeed(2.3, 270);
-  karens.add(karen2);
-  karen3=createSprite(1100,150,50,50);
-  karen3.setSpeed(2.3,0);
-  karens.add(karen3);
-  karen4=createSprite(100,SCENE_H/2+100,50,50);
-  karen4.setSpeed(2.3,0);
-  karens.add(karen4);
-  karen5=createSprite(SCENE_W/2-100,SCENE_H-50,50,50);
-  karen5.setSpeed(2.3,180);
-  karens.add(karen5);
-  karen6=createSprite(SCENE_W/2-100,SCENE_H/2+100,50,50);
-  karen6.setSpeed(2.3,270);
-  karens.add(karen6);
-  karen7=createSprite(100,SCENE_H-100,50,50);
-  karen7.setSpeed(2.3,90);
-  karens.add(karen7);
-  for(let i=0; i<7; i++){
-    karens[i].setCollider("circle",0,0,25);
-    karens[i].addImage(karen);
-  }
-  //karenSprite.addImage(karen);
-  maga1 = createSprite(SCENE_W / 2, 150, 50, 50); //creates maga enemy
-  magas.add(maga1);
-  maga2 = createSprite(50, SCENE_H- 100, 50, 50);
-  magas.add(maga2);
-  maga3 = createSprite(SCENE_W - 200, SCENE_H / 2, 50, 50);
-  magas.add(maga3);
-  for(let i=0; i<3;i++){
-    magas[i].setCollider("circle",0,0,25);
-    magas[i].addImage(maga);
-  }
-  //magaSprite.addImage(maga);
-  mask1 = createSprite(SCENE_W / 2 + 650, SCENE_H / 2 + 520, 50, 50); //creates masks
-  // maskImage=image(mask,width-200, height/2);
-  mask1.addImage(mask);
-  mask1.setCollider("rectangle",0,0,50,50);
-  masks.add(mask1);
-  mask2 = createSprite(250, 100, 50, 50);
-  mask2.addImage(mask);
-  mask2.setCollider("rectangle",0,0,50,50);
-  masks.add(mask2);
-  mask3 = createSprite(800, SCENE_H - 280, 50, 50);
-  mask3.addImage(mask);
-  mask3.setCollider("rectangle",0,0,50,50);
-  masks.add(mask3);
-  mask4 = createSprite(SCENE_W - 150, 200, 50, 50);
-  mask4.addImage(mask);
-  mask4.setCollider("rectangle",0,0,50,50);
-  masks.add(mask4);
-  mask5 = createSprite(SCENE_W - 200, SCENE_H / 2, 50, 50);
-  mask5.addImage(mask);
-  mask5.setCollider("rectangle",0,0,50,50);
-  mask5.visible = false;
-  masks.add(mask5);
+  userSprite.setCollider("circle", 0, 0, 25);
+
+  karen1 = new Karen(SCENE_W / 4 + 100, 50, 90, 270, box21.boxSprite, box1.boxSprite);
+  karen1.create();
+  karens.add(karen1.karenSprite);
+  karen2 = new Karen(SCENE_W / 2 - 200, SCENE_H / 2 - 100, 270, 90, box1.boxSprite, box21.boxSprite);
+  karen2.create();
+  karens.add(karen2.karenSprite);
+  karen3 = new Karen(1100, 150, 0, 180, box4.boxSprite, box22.boxSprite);
+  karen3.create();
+  karens.add(karen3.karenSprite);
+  karen4 = new Karen(100, SCENE_H / 2 + 100, 0, 180, box24.boxSprite, box2.boxSprite);
+  karen4.create();
+  karens.add(karen4.karenSprite);
+  karen5 = new Karen(SCENE_W / 2 - 100, SCENE_H - 50, 180, 0, box2.boxSprite, box24.boxSprite);
+  karen5.create();
+  karens.add(karen5.karenSprite);
+  karen6 = new Karen(SCENE_W / 2 - 100, SCENE_H / 2 + 100, 270, 90, box23.boxSprite, box1.boxSprite);
+  karen6.create();
+  karens.add(karen6.karenSprite);
+  karen7 = new Karen(100, SCENE_H - 100, 90, 270, safeSpot, box23.boxSprite);
+  karen7.create();
+  karens.add(karen7.karenSprite);
+
+  maga1 = new Maga(SCENE_W / 2, 150);
+  maga1.create();
+  magas.add(maga1.magaSprite);
+  maga2 = new Maga(50, SCENE_H - 100);
+  maga2.create();
+  magas.add(maga2.magaSprite);
+  maga3 = new Maga(SCENE_W - 200, SCENE_H / 2);
+  maga3.create();
+  magas.add(maga3.magaSprite);
+  maga4 = new Maga(SCENE_W / 2 + 150, SCENE_H - 100);
+  maga4.create();
+  magas.add(maga4.magaSprite);
+
+  mask1 = new Mask(SCENE_W / 2 + 650, SCENE_H / 2 + 520);
+  mask1.create();
+  masks.add(mask1.maskSprite);
+  mask2 = new Mask(250, 100);
+  mask2.create();
+  masks.add(mask2.maskSprite);
+  mask3 = new Mask(800, SCENE_H - 280);
+  mask3.create();
+  masks.add(mask3.maskSprite);
+  mask4 = new Mask(SCENE_W - 150, 200);
+  mask4.create();
+  masks.add(mask4.maskSprite);
+  mask5 = new Mask(SCENE_W - 200, SCENE_H / 2);
+  mask5.create();
+  mask5.maskSprite.visible = false;
+  masks.add(mask5.maskSprite);
 
   heartCounter = 3;
-  state=1;
-  maskCounter=0;
-  f1=30;
-  f2=30;
-  f3=30;
-  f4=30;
-  f5=30;
-  h1=30;
-  h2=30;
-  h3=30;
+  state = 1;
+  maskCounter = 0;
+  f1 = 30;
+  f2 = 30;
+  f3 = 30;
+  f4 = 30;
+  f5 = 30;
+  h1 = 30;
+  h2 = 30;
+  h3 = 30;
 }
+
 
 function draw() {
-  camera.position.x=userSprite.position.x;
-  camera.position.y=userSprite.position.y;
-  if(state===1){
-  background(backgroundImg);
-  timeStart = millis(); //starts timer
-  karenMove();
-  // magaMove();
-  userMove();
-  collision();
-  doColorPuzzle();
-  doMovePuzzle();
-  checkMasks();
-  drawSprites();
-  scoreboard();
+  camera.position.x = userSprite.position.x;
+  camera.position.y = userSprite.position.y;
+  if (state === 1) {
+    background(backgroundImg);
+    timeStart = millis(); //starts timer
+    karenMove();
+    magaMove();
+    userMove();
+    collision();
+    doColorPuzzle();
+    doMovePuzzle();
+    checkMasks();
+    loseLife();
+    removeMasks();
+    drawSprites();
+    scoreboard();
   }
-  else if(state===2){
+  else if (state === 2) {
     camera.off();
-    fill(250,0,0);
+    fill(255);
+    rect(0, 0, width, height);
+    fill(250, 0, 0);
     textFont(myFont);
-    textSize(120);
-    text("Game Over\n  You Lost", width/2-400, height/2-100);
+    textSize(100);
+    text("Game Over\n You Lost", width / 2 - 350, height / 2 - 300);
+    textSize(50);
+    fill(0);
+    text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
+    textSize(15);
+    text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
+    text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
   }
-  else if(state===3){
+  else if (state === 3) {
     camera.off();
-    fill(250,0,0);
+    fill(255);
+    rect(0, 0, width, height);
+    fill(0, 0, 250);
     textFont(myFont);
-    textSize(120);
-    text("Game Over\n  You Won!", width/2-400, height/2-100);
+    textSize(100);
+    text("Game Over\n You Won!", width / 2 - 350, height / 2 - 300);
+    textSize(50);
+    fill(0);
+    text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
+    textSize(15);
+    text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
+    text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
   }
 }
 
-function scoreboard(){
+function getNewCases(x) {
+  let seconds = timeStart / 1000;
+  let cases = x[0].positiveIncrease;
+  caseData = floor((cases / 8640) * seconds);
+  return caseData;
+}
+
+function scoreboard() {
   fill(255); //draws top right display
   stroke(0);
   strokeWeight(4);
-  rect(camera.position.x-150, camera.position.y-400, width-450, 50);
-  line(camera.position.x+200, camera.position.y-400, camera.position.x+200, camera.position.y-350);
-  line(camera.position.x+450, camera.position.y-400, camera.position.x+450, camera.position.y-350);
+  rect(camera.position.x - 150, camera.position.y - 400, width - 450, 50);
+  line(camera.position.x + 200, camera.position.y - 400, camera.position.x + 200, camera.position.y - 350);
+  line(camera.position.x + 450, camera.position.y - 400, camera.position.x + 450, camera.position.y - 350);
   strokeWeight(0);
-  fill(0,0,200,90);
-  family1=ellipse(camera.position.x-95, camera.position.y-375, f1, f1);
-  family2=ellipse(camera.position.x-35, camera.position.y-375, f2, f2);
-  family3=ellipse(camera.position.x+25, camera.position.y-375, f3, f3);
-  family4=ellipse(camera.position.x+85, camera.position.y-375, f4, f4);
-  family5=ellipse(camera.position.x+145, camera.position.y-375, f5, f5);
-  fill(250,100,100,90);
-  heart1=ellipse(camera.position.x+240, camera.position.y-375, h1, h1);
-  heart2=ellipse(camera.position.x+320, camera.position.y-375, h2, h2);
-  heart3=ellipse(camera.position.x+400, camera.position.y-375, h3, h3);
+  fill(0, 0, 200, 90);
+  family1 = ellipse(camera.position.x - 95, camera.position.y - 375, f1, f1);
+  family2 = ellipse(camera.position.x - 35, camera.position.y - 375, f2, f2);
+  family3 = ellipse(camera.position.x + 25, camera.position.y - 375, f3, f3);
+  family4 = ellipse(camera.position.x + 85, camera.position.y - 375, f4, f4);
+  family5 = ellipse(camera.position.x + 145, camera.position.y - 375, f5, f5);
+  fill(250, 100, 100, 90);
+  heart1 = ellipse(camera.position.x + 240, camera.position.y - 375, h1, h1);
+  heart2 = ellipse(camera.position.x + 320, camera.position.y - 375, h2, h2);
+  heart3 = ellipse(camera.position.x + 400, camera.position.y - 375, h3, h3);
   fill(0);
   timer();
 }
@@ -381,90 +372,39 @@ function timer() {
   mins = floor(timeStart / 60000);
   sec = floor(timeStart / 1000);
   if (sec >= 60) {
-    sec -= 60*mins;
+    sec -= 60 * mins;
   }
   fill(0);
   textSize(30);
   if (sec < 10) {
-    text(mins + " : 0" + sec, camera.position.x+490, camera.position.y-365);
+    text(mins + " : 0" + sec, camera.position.x + 490, camera.position.y - 365);
   } else {
-    text(mins + " : " + sec, camera.position.x+490, camera.position.y-365);
+    text(mins + " : " + sec, camera.position.x + 490, camera.position.y - 365);
   }
 }
 
 function karenMove() {
   //creates karens path
-  if (karen1.collide(box1)) {
-    karen1.setSpeed(2, 270);
-  }
-  if (karen1.collide(box21)) {
-    karen1.setSpeed(2, 90);
-  }
-  if (karen2.collide(box1)) {
-    karen2.setSpeed(2, 270);
-  }
-  if (karen2.collide(box21)) {
-    karen2.setSpeed(2, 90);
-  }
-  if(karen3.collide(box4)){
-    karen3.setSpeed(2,0);
-  }
-  if(karen3.collide(box22)){
-    karen3.setSpeed(2,180);
-  }
-  if(karen4.collide(box2)){
-    karen4.setSpeed(2,180);
-  }
-  if(karen4.collide(box24)){
-    karen4.setSpeed(2,0);
-  }
-  if(karen5.collide(box2)){
-    karen5.setSpeed(2,180);
-  }
-  if(karen5.collide(box24)){
-    karen5.setSpeed(2,0);
-  }
-  if(karen6.collide(box1)){
-    karen6.setSpeed(2,90);
-  }
-  if(karen6.collide(box23)){
-    karen6.setSpeed(2,270);
-  }
-  if(karen7.collide(safeSpot)){
-    karen7.setSpeed(2,90);
-  }
-  if(karen7.collide(box23)){
-    karen7.setSpeed(2,270);
-  }
+  karen1.move();
+  karen2.move();
+  karen3.move();
+  karen4.move();
+  karen5.move();
+  karen6.move();
+  karen7.move();
 }
 
 function magaMove() {
-  //creates maga path
-  maga1.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
-  maga1.maxSpeed = 2.4;
-  maga2.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
-  maga2.maxSpeed = 2.4;
-  maga3.attractionPoint(0.5, userSprite.position.x, userSprite.position.y);
-  maga3.maxSpeed = 2.4;
-  if(second()===10 || second()===20 || second()===30 || second()===40 || second()===50 || second()===60){
-    createCough(maga1.position.x,maga1.position.y);
-    cough.draw();
-  }
-}
-
-function createCough(x,y){
-  for(let i; i<15;i++){
-  let j=random(5,15);
-  let a=createSprite(x,y,j,j);
-  a.setSpeed(random(1,3),random(0,360));
-  a.shapeColor=color(50,200,50,60);
-  a.life=40;
-  cough.add(a);
-  }
-
+  maga1.move();
+  maga2.move();
+  maga3.move();
+  maga4.move();
 }
 
 function userMove() {
+  fill(0, 60);
+  strokeWeight(0);
+  ellipse(userSprite.position.x, userSprite.position.y + 20, 40, 25);
   //controls user movement
   if (keyIsDown(65) || keyIsDown(97)) {
     userSprite.position.x -= 5;
@@ -480,23 +420,44 @@ function userMove() {
   }
 }
 
-function doMovePuzzle(){
-  if (slider1.collide(mover1) === true) {
+function doMovePuzzle() {
+  if (slider1.sliderSprite.collide(mover1.moverSprite) === true) {
     // mover1.remove();
-    slider1.remove();
+    slider1.sliderSprite.remove();
   }
-  if (slider2.collide(mover2) === true) {
+  if (slider2.sliderSprite.collide(mover2.moverSprite) === true) {
     // mover2.remove();
-    slider2.remove();
+    slider2.sliderSprite.remove();
   }
-  if (slider3.collide(mover3) === true) {
+  if (slider3.sliderSprite.collide(mover3.moverSprite) === true) {
     // mover3.remove();
-    slider3.remove();
+    slider3.sliderSprite.remove();
   }
-  if (slider4.collide(mover4) === true) {
+  if (slider4.sliderSprite.collide(mover4.moverSprite) === true) {
     // mover4.remove();
-    slider4.remove();
-    mask5.visible = true;
+    slider4.sliderSprite.remove();
+    mask5.maskSprite.visible = true;
+  }
+}
+
+function loseLife() {
+  if (userSprite.collide(karens) || userSprite.collide(magas)) {
+    userSprite.position.x = safeSpot.position.x;
+    userSprite.position.y = safeSpot.position.y;
+    heartCounter--;
+    if (heartCounter === 2) {
+      h3 = 0;
+    }
+    else if (heartCounter == 1) {
+      h2 = 0;
+    }
+    if (heartCounter === 0) {
+      h1 = 0;
+      newCases = getNewCases(data);
+      clearScreen();
+      // camera.off();
+      state = 2;
+    }
   }
 }
 
@@ -506,80 +467,86 @@ function collision() {
   userSprite.overlap(safeSpot);
   userSprite.collide(obstacles);
   userSprite.collide(movers);
+  userSprite.collide(townSign);
   magas.collide(safeSpot);
   magas.collide(magas);
   magas.collide(obstacles);
   karens.collide(obstacles);
   sliders.collide(obstacles);
+}
 
-  //   userSprite.overlap(colorPuzzle, doColorPuzzle);
-  
-  if (userSprite.collide(karens) || userSprite.collide(magas)) {
-    userSprite.position.x = safeSpot.position.x;
-    userSprite.position.y = safeSpot.position.y;
-    heartCounter--;
-    if(heartCounter===2){
-      h3=0;
+function removeMasks() {
+  if (userSprite.overlap(mask1.maskSprite)) {
+    if (maskCounter === 0) {
+      userSprite.addImage(masked);
     }
-    else if(heartCounter==1){
-      h2=0;
-    }
-    if(heartCounter===0){
-      h1=0;
-      clearScreen();
-      // camera.off();
-      state=2;
-    }
+    mask1.maskSprite.remove();
+    f1 = 0;
+    maskCounter++;
   }
-  if (userSprite.overlap(mask1)) {
-    mask1.remove();
-    f1=0;
-  }
-  if (userSprite.overlap(mask2)) {
-    mask2.remove();
-    f2=0;
+  if (userSprite.overlap(mask2.maskSprite)) {
+    if (maskCounter === 0) {
+      userSprite.addImage(masked);
     }
-  if (userSprite.overlap(mask3)) {
-    mask3.remove();
-    f3=0;
+    mask2.maskSprite.remove();
+    f2 = 0;
+    maskCounter++;
   }
-  if (userSprite.overlap(mask4)) {
-    mask4.remove();
-    f4=0;
-      }
-  if (userSprite.overlap(mask5)) {
-    mask5.remove();
-    f5=0;
+  if (userSprite.overlap(mask3.maskSprite)) {
+    if (maskCounter === 0) {
+      userSprite.addImage(masked);
+    }
+    mask3.maskSprite.remove();
+    f3 = 0;
+    maskCounter++;
+  }
+  if (userSprite.overlap(mask4.maskSprite)) {
+    if (maskCounter === 0) {
+      userSprite.addImage(masked);
+    }
+    mask4.maskSprite.remove();
+    f4 = 0;
+    maskCounter++;
+  }
+  if (userSprite.overlap(mask5.maskSprite)) {
+    if (maskCounter === 0) {
+      userSprite.addImage(masked);
+    }
+    mask5.maskSprite.remove();
+    f5 = 0;
+    maskCounter++;
   }
 }
 
-function checkMasks(){
-  if(mask1.removed===true && mask2.removed===true && mask3.removed===true && mask4.removed===true && mask5.removed===true){
+function checkMasks() {
+  if (mask1.maskSprite.removed === true && mask2.maskSprite.removed === true && mask3.maskSprite.removed === true && mask4.maskSprite.removed === true && mask5.maskSprite.removed === true) {
     clearScreen();
-    if(heartCounter>0){
+    if (heartCounter > 0) {
+      newCases = getNewCases(data);
       // camera.off();
-      state=3;
+      state = 3;
     }
-    else{
+    else {
       // camera.off();
-      state=2;
+      newCases = getNewCases(data);
+      state = 2;
     }
   }
 }
 
-function clearScreen(){
+function clearScreen() {
   // camera.off();
   clear();
-      obstacles.removeSprites();
-      magas.removeSprites();
-      karens.removeSprites();
-      sliders.removeSprites();
-      colorPuzzle.removeSprites();
-      masks.removeSprites();
-      movers.removeSprites();
-      safeSpot.remove();
-      userSprite.remove();
-      state=2;
+  obstacles.removeSprites();
+  magas.removeSprites();
+  karens.removeSprites();
+  sliders.removeSprites();
+  colorPuzzle.removeSprites();
+  masks.removeSprites();
+  movers.removeSprites();
+  safeSpot.remove();
+  userSprite.remove();
+  state = 2;
 }
 
 function doColorPuzzle() {
@@ -588,42 +555,42 @@ function doColorPuzzle() {
   color2Count = 1;
   color3Count = 2;
   color4Count = 3;
-  if (userSprite.collide(color1)===true) {
+  if (userSprite.collide(color1.colorSprite) === true) {
     color1Count++;
     if (color1Count > 3) {
       color1Count = 0;
     }
-    color1.shapeColor = colors[color1Count];
+    color1.colorSprite.shapeColor = colors[color1Count];
   }
-   if (userSprite.collide(color2) === true) {
+  if (userSprite.collide(color2.colorSprite) === true) {
     color2Count++;
     if (color2Count > 3) {
       color2Count = 0;
     }
-    color2.shapeColor = colors[color2Count];
-  } if (userSprite.collide(color3) === true) {
+    color2.colorSprite.shapeColor = colors[color2Count];
+  } if (userSprite.collide(color3.colorSprite) === true) {
     color3Count++;
     if (color3Count > 3) {
       color3Count = 0;
     }
-    color3.shapeColor = colors[color3Count];
-  } if (userSprite.collide(color4) === true) {
+    color3.colorSprite.shapeColor = colors[color3Count];
+  } if (userSprite.collide(color4.colorSprite) === true) {
     color4Count++;
     if (color4Count > 3) {
       color4Count = 0;
     }
-    color4.shapeColor = colors[color4Count];
+    color4.colorSprite.shapeColor = colors[color4Count];
   }
   if (
-    color1.shapeColor===colors[1] &&
-    color2.shapeColor===colors[2] &&
-    color3.shapeColor===colors[3] &&
-    color4.shapeColor===colors[0]
+    color1.colorSprite.shapeColor === colors[1] &&
+    color2.colorSprite.shapeColor === colors[2] &&
+    color3.colorSprite.shapeColor === colors[3] &&
+    color4.colorSprite.shapeColor === colors[0]
   ) {
-    color1.position.y-=200;
-    color2.position.y-=150;
-    color3.position.y-=100;
-    color4.position.y-=50;
+    color1.colorSprite.position.y -= 200;
+    color2.colorSprite.position.y -= 150;
+    color3.colorSprite.position.y -= 100;
+    color4.colorSprite.position.y -= 50;
     colorPuzzle.removeSprites();
   }
 }

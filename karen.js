@@ -1,0 +1,26 @@
+class Karen{
+    constructor(x,y,d1,d2,upper,lower){
+        this.x=x;
+        this.y=y;
+        this.image=karen;
+        this.d1=d1;
+        this.d2=d2;
+        this.upper=upper;
+        this.lower=lower;
+    }
+    create(){
+        this.karenSprite=createSprite(this.x,this.y);
+        this.karenSprite.addImage(this.image);
+        this.karenSprite.setCollider("circle",0,0,25);
+        this.karenSprite.setSpeed(2.5,this.d1);
+        return(this.karenSprite);
+    }
+    move(){
+        if(this.karenSprite.collide(this.upper)){
+            this.karenSprite.setSpeed(2.5,this.d1);
+        }
+        if(this.karenSprite.collide(this.lower)){
+            this.karenSprite.setSpeed(2.5,this.d2);
+        }
+    }
+}
