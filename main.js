@@ -33,8 +33,11 @@ var bricks;
 var newCases;
 var url;
 var data;
+var offset;
+var timer1;
 
-function preload() {
+
+function preload() { //loads all images plus font and JSON
   user = loadImage('media/userChar.png');
   karen = loadImage("media/karenChar.png");
   maga = loadImage("media/magaChar.png");
@@ -45,7 +48,9 @@ function preload() {
   mask = loadImage("media/mask.png");
   recycle = loadImage("media/recycle.png");
   masked = loadImage("media/maskedChar.png");
-  backgroundImg = loadImage("media/background.png")
+  backgroundImg1=loadImage("media/emptyRoad.png");
+  backgroundImg2 = loadImage("media/background.png");
+  instructions=loadImage("media/instructions.png")
   b1 = loadImage("media/b01.png");
   b2 = loadImage("media/b002.png");
   b3 = loadImage("media/b3.png");
@@ -67,6 +72,9 @@ function preload() {
   border2 = loadImage("media/border2.png");
   car = loadImage("media/car.png");
   sign = loadImage("media/sign.png");
+  messageBubbleR=loadImage("media/messageBubbleR.png");
+  messageBubbleL=loadImage("media/messageBubbleL.png");
+  carAnimation=loadAnimation("media/carAnimation01.png","media/carAnimation01.png","media/carAnimation02.png","media/carAnimation02.png","media/carAnimation03.png","media/carAnimation03.png","media/carAnimation02.png","media/carAnimation02.png");
   unmaskedSmall = loadImage("media/userCharSmall.png");
   maskedSmall = loadImage("media/maskedCharSmall.png");
   myFont = loadFont("assets/RetroGaming.ttf");
@@ -76,7 +84,7 @@ function preload() {
 
 function setup() {
   createCanvas(1200, 800);
-  SCENE_W = displayWidth * 2;
+  SCENE_W = displayWidth * 2; //total screen size is double that of the window
   SCENE_H = displayHeight * 2;
   obstacles = new Group();
   masks = new Group();
@@ -86,15 +94,21 @@ function setup() {
   magas = new Group();
   karens = new Group();
 
-  safeSpot = createSprite(75, SCENE_H / 2);
+  carSprite=createSprite(width/2-220,height/2+50); //creates car for intro animation
+  carSprite.addAnimation('drive',carAnimation);
+  messageR=createSprite(width/2,height/2-100); //creates speech bubble for intro animation
+  messageR.addImage(messageBubbleR);
+  messageL=createSprite(width/2-460,height/2-100);//creates other speech bubble
+  messageL.addImage(messageBubbleL);
+  safeSpot = createSprite(75, SCENE_H / 2); //creates the spawn point for the game
   safeSpot.addImage(car);
   safeSpot.setCollider("rectangle", 0, 0, 150, 129);
-  townSign = createSprite(75, SCENE_H / 2 - 150);
+  townSign = createSprite(75, SCENE_H / 2 - 150); //creates the town sign displayed near the spawn 
   townSign.addImage(sign);
   townSign.setCollider("rectangle", 0, 0, 150, 130);
   hearts = [heart1, heart2, heart3];
 
-  box1 = new Box(SCENE_W / 2, SCENE_H / 2, b1, 2080, 100);
+  box1 = new Box(SCENE_W / 2, SCENE_H / 2, b1, 2080, 100); //creates the sprites for all the boundaries boxes and obstacles
   box1.create();
   obstacles.add(box1.boxSprite);
   box2 = new Box(SCENE_W / 2, SCENE_H / 2 + 150, b2, 100, 1500);
@@ -173,7 +187,7 @@ function setup() {
   box26.create();
   obstacles.add(box26.boxSprite);
 
-  color1 = new CPuzzle(580, 400, 200, 0, 0);
+  color1 = new CPuzzle(580, 400, 200, 0, 0); //creates the components of the color puzzle
   color1.create();
   colorPuzzle.add(color1.colorSprite);
   color2 = new CPuzzle(580, 350, 230, 230, 0);
@@ -192,7 +206,7 @@ function setup() {
     color(0, 0, 200),
   ];
 
-  mover1 = new Mover(SCENE_W - 150, 325);
+  mover1 = new Mover(SCENE_W - 150, 325); //creates the recycling bins for the slider puzzle
   mover1.create();
   movers.add(mover1.moverSprite);
   mover2 = new Mover(SCENE_W / 2 + 200, 450);
@@ -205,7 +219,7 @@ function setup() {
   mover4.create();
   movers.add(mover4.moverSprite);
 
-  slider1 = new Slider(SCENE_W / 2 + 400, 320, trumpFlag);
+  slider1 = new Slider(SCENE_W / 2 + 400, 320, trumpFlag); //creates the different flags used in the slider puzzle
   slider1.create();
   sliders.add(slider1.sliderSprite);
   slider2 = new Slider(SCENE_W - 350, 445, confederateFlag);
@@ -218,11 +232,11 @@ function setup() {
   slider4.create();
   sliders.add(slider4.sliderSprite);
 
-  userSprite = createSprite(50, SCENE_H / 2), 50, 50;
+  userSprite = createSprite(50, SCENE_H / 2), 50, 50; //creates the playable character
   userSprite.addImage(user);
   userSprite.setCollider("circle", 0, 0, 25);
 
-  karen1 = new Karen(SCENE_W / 4 + 100, 50, 90, 270, box21.boxSprite, box1.boxSprite);
+  karen1 = new Karen(SCENE_W / 4 + 100, 50, 90, 270, box21.boxSprite, box1.boxSprite); //creates the Karen enemy
   karen1.create();
   karens.add(karen1.karenSprite);
   karen2 = new Karen(SCENE_W / 2 - 200, SCENE_H / 2 - 100, 270, 90, box1.boxSprite, box21.boxSprite);
@@ -237,14 +251,14 @@ function setup() {
   karen5 = new Karen(SCENE_W / 2 - 100, SCENE_H - 50, 180, 0, box2.boxSprite, box24.boxSprite);
   karen5.create();
   karens.add(karen5.karenSprite);
-  karen6 = new Karen(SCENE_W / 2 - 100, SCENE_H / 2 + 100, 270, 90, box23.boxSprite, box1.boxSprite);
+  karen6 = new Karen(SCENE_W / 2 - 100, SCENE_H / 2 + 200, 270, 90, box23.boxSprite, box1.boxSprite);
   karen6.create();
   karens.add(karen6.karenSprite);
-  karen7 = new Karen(100, SCENE_H - 100, 90, 270, safeSpot, box23.boxSprite);
+  karen7 = new Karen(100, SCENE_H - 200, 90, 270, safeSpot, box23.boxSprite);
   karen7.create();
   karens.add(karen7.karenSprite);
 
-  maga1 = new Maga(SCENE_W / 2, 150);
+  maga1 = new Maga(SCENE_W / 2, 150); //creates the maga enemy
   maga1.create();
   magas.add(maga1.magaSprite);
   maga2 = new Maga(50, SCENE_H - 100);
@@ -257,7 +271,7 @@ function setup() {
   maga4.create();
   magas.add(maga4.magaSprite);
 
-  mask1 = new Mask(SCENE_W / 2 + 650, SCENE_H / 2 + 520);
+  mask1 = new Mask(SCENE_W / 2 + 650, SCENE_H / 2 + 520); //creates the mask sprites
   mask1.create();
   masks.add(mask1.maskSprite);
   mask2 = new Mask(250, 100);
@@ -275,9 +289,9 @@ function setup() {
   masks.add(mask5.maskSprite);
 
   heartCounter = 3;
-  state = 1;
+  state = 0;
   maskCounter = 0;
-  f1 = 30;
+  f1 = 30; //creates the sizes for the blue circles in the top left display
   f2 = 30;
   f3 = 30;
   f4 = 30;
@@ -285,17 +299,24 @@ function setup() {
   h1 = 30;
   h2 = 30;
   h3 = 30;
+  offset=49000; //offset for the timers start(49 seconds because that is the length of time for the opening animation)
 }
 
 
 function draw() {
-  camera.position.x = userSprite.position.x;
-  camera.position.y = userSprite.position.y;
-  if (state === 1) {
-    background(backgroundImg);
-    timeStart = millis(); //starts timer
-    karenMove();
+  if(state===0){
+   intro(); //does intro animation
+  }
+  else if(state===1){
+    background(instructions); //displays instructions
+  }
+  else if (state === 2) { //the actual gameplay
+    camera.position.x = userSprite.position.x; //sets the cameras position to that of the user
+    camera.position.y = userSprite.position.y;
+    background(backgroundImg2);
+    timeStart = millis()-offset; //starts timer
     magaMove();
+    karenMove();
     userMove();
     collision();
     doColorPuzzle();
@@ -306,85 +327,182 @@ function draw() {
     drawSprites();
     scoreboard();
   }
-  else if (state === 2) {
-    camera.off();
-    fill(255);
-    rect(0, 0, width, height);
-    fill(250, 0, 0);
-    textFont(myFont);
-    textSize(100);
-    text("Game Over\n You Lost", width / 2 - 350, height / 2 - 300);
-    textSize(50);
-    fill(0);
-    text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
-    textSize(15);
-    text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
-    text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
+  else if (state === 3) {//if the game is lost
+    loseConition();
   }
-  else if (state === 3) {
-    camera.off();
-    fill(255);
-    rect(0, 0, width, height);
-    fill(0, 0, 250);
-    textFont(myFont);
-    textSize(100);
-    text("Game Over\n You Won!", width / 2 - 350, height / 2 - 300);
-    textSize(50);
-    fill(0);
-    text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
-    textSize(15);
-    text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
-    text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
+  else if (state === 4) {//if the game is won
+    winCondition();
   }
 }
 
-function getNewCases(x) {
+function winCondition(){ //dictates the display screen if you win the game
+  camera.off();
+  fill(255);
+  rect(0, 0, width, height);
+  fill(0, 0, 250);
+  textFont(myFont);
+  textSize(100);
+  text("Game Over\n You Won!", width / 2 - 350, height / 2 - 300);
+  textSize(50);
+  fill(0);
+  text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
+  textSize(15);
+  text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
+  text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
+}
+
+function loseCondition(){//dictates the display screen if you win the game
+  camera.off();
+  fill(255);
+  rect(0, 0, width, height);
+  fill(250, 0, 0);
+  textFont(myFont);
+  textSize(100);
+  text("Game Over\n You Lost", width / 2 - 350, height / 2 - 300);
+  textSize(50);
+  fill(0);
+  text("In the time you played, " + newCases + "*\nmore people tested positive \nfor COVID** Stop the spread.\n\tWear a goddamn mask (plz)", width / 2 - 450, height / 2);
+  textSize(15);
+  text("*Cases include probable cases (cases without a confirmatory lab result)", 50, height / 2 + 300); //https://wwwn.cdc.gov/nndss/conditions/coronavirus-disease-2019-covid-19/case-definition/2020/
+  text("**Source: The COVID Tracking Project API (covidtracking.com)", 50, height / 2 + 350);
+}
+
+function intro(){//does the entire intro animation sequence
+  timer1=millis();//starts a function level timer
+  background(backgroundImg1);
+  textFont(myFont);
+  if(timer1/1000<46){
+  fill(255,0,0);
+  textSize(16);
+  text("press ENTER to skip intro",width/2+200,80);
+  }
+  textSize(12);
+  fill(0);
+  if(second()%2===0){ //moves the car slightly in the x and y
+    carSprite.position.y+=0.3;
+    carSprite.position.x-=0.3;
+  }
+  else if(second()%2===1){
+    carSprite.position.y-=0.3;
+    carSprite.position.x+=0.3;
+  }
+  if(timer1/1000>3 && timer1/1000<6){ //messages are displayed based on time elapsed
+    drawSprite(messageR);
+    text("wait, did you bring\nour masks?",width/2-80,height/2-150);
+  }
+  if(timer1/1000>6 && timer1/1000<9){
+    drawSprite(messageL);
+    text("no, I thought you\ndid...",width/2-530,height/2-150);
+  }
+  if(timer1/1000>9 && timer1/1000<13){
+    drawSprite(messageR);
+    text("we can't visit your\nparents without them,\nwe'd risk exposing\nthem...",width/2-85,height/2-150);
+  }
+  if(timer1/1000>13 && timer1/1000<16){
+    drawSprite(messageL);
+    text("true, what should\nwe do??",width/2-530,height/2-150);
+  }
+  if(timer1/1000>16 && timer1/1000<21){
+    drawSprite(messageR);
+    text("I'm not sure we\nhaven't passed a\ntown in a while can\nyou check the map?",width/2-85,height/2-150);
+  }
+  if(timer1/1000>21 && timer1/1000<23){
+    drawSprite(messageL);
+    text("ya, just a sec",width/2-530,height/2-150);
+  }
+  if(timer1/1000>26 && timer1/1000<30){
+    drawSprite(messageL);
+    text("okay it looks like\nthere's a ...\nYee-yee-ville in 10\nmiles. Sounds\n kinda sketchy to me",width/2-530,height/2-150);
+  }
+  if(timer1/1000>30 && timer1/1000<34){
+    drawSprite(messageR);
+    text("yeah, odd. We\ncan stop there and\nI'll see if I\ncan find us some\nmasks quickly",width/2-85,height/2-150);
+  }
+  if(timer1/1000>34 && timer1/1000<39){
+    drawSprite(messageL);
+    text("ok, we should be\ncareful...we're in\ntrump country, not\nthe nicest or\nsmartest folk here",width/2-530,height/2-150);
+  }
+  if(timer1/1000>39 && timer1/1000<41){
+    drawSprite(messageR);
+    text("true. we'll be\ncareful and get out\nfast",width/2-85,height/2-150);
+  }
+  if(timer1/1000>41 && timer1/1000<43){//car zooms off
+    carSprite.position.x-=6;
+    carSprite.position.y+=6;
+  }
+  if(timer1/1000>43 && timer1/1000<46){//title screen display
+    textSize(50);
+    text("Where's My Mask?",width/2-550,height/2-300);
+    textSize(20);
+    text("Created by Connor Hester",width/2-350,height/2-200);
+  }
+  if(timer1/1000>44){
+    textSize(16);
+    fill(255,0,0);
+    text("press ENTER to continue",width/2+200,80);
+  }
+  
+  drawSprite(carSprite);
+}
+
+function keyPressed(){
+  if(keyCode===ENTER && state===0){//advances state and clears screen after the first animation
+    offset=timer1;
+    carSprite.remove();
+    messageR.remove();
+    messageL.remove();
+    state=1;
+  }
+  else if(keyCode===ENTER && state===1){//advances state from instructions to game
+    state=2;
+  }
+}
+
+function getNewCases(x) {//calculates the number of new cases of covid that ocurred during the game
   let seconds = timeStart / 1000;
-  let cases = x[0].positiveIncrease;
-  caseData = floor((cases / 8640) * seconds);
+  let cases = x[0].positiveIncrease;//calls for the case increase value from the API
+  caseData = floor((cases / 8640) * seconds);//finds the number of cases per second and then multiplies by seconds elapsed
   return caseData;
 }
 
-function scoreboard() {
-  fill(255); //draws top right display
+function scoreboard() {//draws the display in the top right
+  fill(255); 
   stroke(0);
   strokeWeight(4);
-  rect(camera.position.x - 150, camera.position.y - 400, width - 450, 50);
+  rect(camera.position.x - 150, camera.position.y - 400, width - 450, 50); //white background
   line(camera.position.x + 200, camera.position.y - 400, camera.position.x + 200, camera.position.y - 350);
   line(camera.position.x + 450, camera.position.y - 400, camera.position.x + 450, camera.position.y - 350);
   strokeWeight(0);
-  fill(0, 0, 200, 90);
-  family1 = ellipse(camera.position.x - 95, camera.position.y - 375, f1, f1);
-  family2 = ellipse(camera.position.x - 35, camera.position.y - 375, f2, f2);
-  family3 = ellipse(camera.position.x + 25, camera.position.y - 375, f3, f3);
-  family4 = ellipse(camera.position.x + 85, camera.position.y - 375, f4, f4);
-  family5 = ellipse(camera.position.x + 145, camera.position.y - 375, f5, f5);
-  fill(250, 100, 100, 90);
-  heart1 = ellipse(camera.position.x + 240, camera.position.y - 375, h1, h1);
+  fill(0,0,200,95);
+  family1 = ellipse(camera.position.x-95,camera.position.y-375,f1,f1);//the blue circles representing the masks remaining
+  family2 = ellipse(camera.position.x-35,camera.position.y-375,f2,f2);
+  family3 = ellipse(camera.position.x+25,camera.position.y-375,f3,f3);
+  family4 = ellipse(camera.position.x+85,camera.position.y-375,f4,f4);
+  family5 = ellipse(camera.position.x+145,camera.position.y-375,f5,f5);
+  fill(250, 100, 100);
+  heart1 = ellipse(camera.position.x + 240, camera.position.y - 375, h1, h1);//the pink circles representing the hearts remaining
   heart2 = ellipse(camera.position.x + 320, camera.position.y - 375, h2, h2);
   heart3 = ellipse(camera.position.x + 400, camera.position.y - 375, h3, h3);
   fill(0);
   timer();
 }
 
-function timer() {
-  //tracks time elapsed
+function timer() {//tracks time elapsed
   mins = floor(timeStart / 60000);
   sec = floor(timeStart / 1000);
-  if (sec >= 60) {
+  if (sec >= 60) { //makes sure the seconds go to 0 after every minute passes
     sec -= 60 * mins;
   }
   fill(0);
   textSize(30);
-  if (sec < 10) {
+  if (sec < 10) { //when there is less than 10 seconds, a 0 is added to the front so the timer looks normal
     text(mins + " : 0" + sec, camera.position.x + 490, camera.position.y - 365);
   } else {
     text(mins + " : " + sec, camera.position.x + 490, camera.position.y - 365);
   }
 }
 
-function karenMove() {
-  //creates karens path
+function karenMove() {//calls the karen move() functions
   karen1.move();
   karen2.move();
   karen3.move();
@@ -394,7 +512,7 @@ function karenMove() {
   karen7.move();
 }
 
-function magaMove() {
+function magaMove() {//calls the maga move() functions
   maga1.move();
   maga2.move();
   maga3.move();
@@ -404,65 +522,61 @@ function magaMove() {
 function userMove() {
   fill(0, 60);
   strokeWeight(0);
-  ellipse(userSprite.position.x, userSprite.position.y + 20, 40, 25);
+  ellipse(userSprite.position.x, userSprite.position.y + 20, 40, 25);//draws the user shadow
   //controls user movement
-  if (keyIsDown(65) || keyIsDown(97)) {
+  if (keyIsDown(65) || keyIsDown(97)) {//press 'a' and move left
     userSprite.position.x -= 5;
   }
-  if (keyIsDown(68) || keyIsDown(100)) {
+  if (keyIsDown(68) || keyIsDown(100)) {//press 'd' and move right
     userSprite.position.x += 5;
   }
-  if (keyIsDown(87) || keyIsDown(119)) {
+  if (keyIsDown(87) || keyIsDown(119)) {//press 'w' and move up
     userSprite.position.y -= 5;
   }
-  if (keyIsDown(83) || keyIsDown(115)) {
+  if (keyIsDown(83) || keyIsDown(115)) {//press 's' and  move down
     userSprite.position.y += 5;
   }
 }
 
-function doMovePuzzle() {
+function doMovePuzzle() {//details the collision interaction between the movers and sliders
   if (slider1.sliderSprite.collide(mover1.moverSprite) === true) {
-    // mover1.remove();
     slider1.sliderSprite.remove();
   }
   if (slider2.sliderSprite.collide(mover2.moverSprite) === true) {
-    // mover2.remove();
     slider2.sliderSprite.remove();
   }
   if (slider3.sliderSprite.collide(mover3.moverSprite) === true) {
-    // mover3.remove();
     slider3.sliderSprite.remove();
   }
   if (slider4.sliderSprite.collide(mover4.moverSprite) === true) {
-    // mover4.remove();
     slider4.sliderSprite.remove();
-    mask5.maskSprite.visible = true;
+    mask5.maskSprite.visible = true;//after the puzzle is completed, the 5th masks appears
   }
 }
 
 function loseLife() {
-  if (userSprite.collide(karens) || userSprite.collide(magas)) {
+  if (userSprite.collide(karens) || userSprite.collide(magas)) {//if the user collides with maga or karen, they are sent back to the spawn point
     userSprite.position.x = safeSpot.position.x;
     userSprite.position.y = safeSpot.position.y;
-    heartCounter--;
-    if (heartCounter === 2) {
+    heartCounter--;//and a heart is taken away
+    if (heartCounter === 2) {//removes the hearts from the top right display
       h3 = 0;
     }
     else if (heartCounter == 1) {
       h2 = 0;
     }
-    if (heartCounter === 0) {
+    if (heartCounter === 0) { //if there are no hearts left, the clear screen and case calculation functions are called and state is advanced
       h1 = 0;
       newCases = getNewCases(data);
       clearScreen();
       // camera.off();
-      state = 2;
+      state = 3;
     }
   }
 }
 
 function collision() {
-  //details object interactions
+  //details object collisions for the user as well as the NPC's
   userSprite.displace(sliders);
   userSprite.overlap(safeSpot);
   userSprite.collide(obstacles);
@@ -476,12 +590,12 @@ function collision() {
 }
 
 function removeMasks() {
-  if (userSprite.overlap(mask1.maskSprite)) {
+  if (userSprite.overlap(mask1.maskSprite)) { //if user collides with a mask
     if (maskCounter === 0) {
-      userSprite.addImage(masked);
+      userSprite.addImage(masked);//if this is the first mask, the user image changes from unmasked to masked
     }
-    mask1.maskSprite.remove();
-    f1 = 0;
+    mask1.maskSprite.remove();//removes the mask from  play
+    f1=0;//removes the mask from the top right display
     maskCounter++;
   }
   if (userSprite.overlap(mask2.maskSprite)) {
@@ -489,7 +603,7 @@ function removeMasks() {
       userSprite.addImage(masked);
     }
     mask2.maskSprite.remove();
-    f2 = 0;
+    f2=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask3.maskSprite)) {
@@ -497,7 +611,7 @@ function removeMasks() {
       userSprite.addImage(masked);
     }
     mask3.maskSprite.remove();
-    f3 = 0;
+    f3=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask4.maskSprite)) {
@@ -505,7 +619,7 @@ function removeMasks() {
       userSprite.addImage(masked);
     }
     mask4.maskSprite.remove();
-    f4 = 0;
+    f4=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask5.maskSprite)) {
@@ -513,29 +627,26 @@ function removeMasks() {
       userSprite.addImage(masked);
     }
     mask5.maskSprite.remove();
-    f5 = 0;
+    f5=0;
     maskCounter++;
   }
 }
 
-function checkMasks() {
-  if (mask1.maskSprite.removed === true && mask2.maskSprite.removed === true && mask3.maskSprite.removed === true && mask4.maskSprite.removed === true && mask5.maskSprite.removed === true) {
+function checkMasks() {//dictates the game ending conditions
+  if (mask1.maskSprite.removed === true && mask2.maskSprite.removed === true && mask3.maskSprite.removed === true && mask4.maskSprite.removed === true && mask5.maskSprite.removed === true) { //if all masks are gone then clear the screen
     clearScreen();
-    if (heartCounter > 0) {
+    if (heartCounter > 0) {//if there are lives left then you are taken to the win condition screen
       newCases = getNewCases(data);
-      // camera.off();
-      state = 3;
+      state = 4;
     }
-    else {
-      // camera.off();
+    else { //if there are no lives left then you are taken to the lose condition screen
       newCases = getNewCases(data);
-      state = 2;
+      state = 3;
     }
   }
 }
 
-function clearScreen() {
-  // camera.off();
+function clearScreen() { //gets rid of everything on the screen
   clear();
   obstacles.removeSprites();
   magas.removeSprites();
@@ -546,7 +657,7 @@ function clearScreen() {
   movers.removeSprites();
   safeSpot.remove();
   userSprite.remove();
-  state = 2;
+  state = 3;
 }
 
 function doColorPuzzle() {
@@ -555,7 +666,7 @@ function doColorPuzzle() {
   color2Count = 1;
   color3Count = 2;
   color4Count = 3;
-  if (userSprite.collide(color1.colorSprite) === true) {
+  if (userSprite.collide(color1.colorSprite) === true) {//if the user collides with a color puzzle piece then it changes color
     color1Count++;
     if (color1Count > 3) {
       color1Count = 0;
@@ -582,7 +693,7 @@ function doColorPuzzle() {
     color4.colorSprite.shapeColor = colors[color4Count];
   }
   if (
-    color1.colorSprite.shapeColor === colors[1] &&
+    color1.colorSprite.shapeColor === colors[1] &&//if all of the puzzle pieces have changed color to the specified color, the sprites are removed and shifted out of the way so the user can pass
     color2.colorSprite.shapeColor === colors[2] &&
     color3.colorSprite.shapeColor === colors[3] &&
     color4.colorSprite.shapeColor === colors[0]
