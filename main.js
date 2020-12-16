@@ -37,7 +37,10 @@ var offset;
 var timer1;
 
 
-function preload() { //loads all images plus font and JSON
+function preload() { //loads all images and sounds plus font and JSON
+  // soundFormats('wav','mp3');
+  // introMusic=loadSound("assets/introMusic.wav");
+  // backgroundTheme=loadSound("assets/backgroundTheme.wav");
   user = loadImage('media/userChar.png');
   karen = loadImage("media/karenChar.png");
   maga = loadImage("media/magaChar.png");
@@ -47,10 +50,11 @@ function preload() { //loads all images plus font and JSON
   dontTreadFlag = loadImage("media/dontTreadFlag.png");
   mask = loadImage("media/mask.png");
   recycle = loadImage("media/recycle.png");
+  recycleFull=loadImage("media/recycleBinFull.png");
   masked = loadImage("media/maskedChar.png");
   backgroundImg1=loadImage("media/emptyRoad.png");
   backgroundImg2 = loadImage("media/background.png");
-  instructions=loadImage("media/instructions.png")
+  instructions=loadImage("media/instructions2.png")
   b1 = loadImage("media/b01.png");
   b2 = loadImage("media/b002.png");
   b3 = loadImage("media/b3.png");
@@ -236,28 +240,6 @@ function setup() {
   userSprite.addImage(user);
   userSprite.setCollider("circle", 0, 0, 25);
 
-  karen1 = new Karen(SCENE_W / 4 + 100, 50, 90, 270, box21.boxSprite, box1.boxSprite); //creates the Karen enemy
-  karen1.create();
-  karens.add(karen1.karenSprite);
-  karen2 = new Karen(SCENE_W / 2 - 200, SCENE_H / 2 - 100, 270, 90, box1.boxSprite, box21.boxSprite);
-  karen2.create();
-  karens.add(karen2.karenSprite);
-  karen3 = new Karen(1100, 150, 0, 180, box4.boxSprite, box22.boxSprite);
-  karen3.create();
-  karens.add(karen3.karenSprite);
-  karen4 = new Karen(100, SCENE_H / 2 + 100, 0, 180, box24.boxSprite, box2.boxSprite);
-  karen4.create();
-  karens.add(karen4.karenSprite);
-  karen5 = new Karen(SCENE_W / 2 - 100, SCENE_H - 50, 180, 0, box2.boxSprite, box24.boxSprite);
-  karen5.create();
-  karens.add(karen5.karenSprite);
-  karen6 = new Karen(SCENE_W / 2 - 100, SCENE_H / 2 + 200, 270, 90, box23.boxSprite, box1.boxSprite);
-  karen6.create();
-  karens.add(karen6.karenSprite);
-  karen7 = new Karen(100, SCENE_H - 200, 90, 270, safeSpot, box23.boxSprite);
-  karen7.create();
-  karens.add(karen7.karenSprite);
-
   maga1 = new Maga(SCENE_W / 2, 150); //creates the maga enemy
   maga1.create();
   magas.add(maga1.magaSprite);
@@ -270,6 +252,15 @@ function setup() {
   maga4 = new Maga(SCENE_W / 2 + 150, SCENE_H - 100);
   maga4.create();
   magas.add(maga4.magaSprite);
+  maga5=new Maga(SCENE_W-500,100);
+  maga5.create();
+  magas.add(maga5.magaSprite);
+  maga6=new Maga(100,100);
+  maga6.create();
+  magas.add(maga6.magaSprite);
+  maga7=new Maga(SCENE_W/2-150,SCENE_H-100);
+  maga7.create();
+  magas.add(maga7.magaSprite);
 
   mask1 = new Mask(SCENE_W / 2 + 650, SCENE_H / 2 + 520); //creates the mask sprites
   mask1.create();
@@ -288,6 +279,34 @@ function setup() {
   mask5.maskSprite.visible = false;
   masks.add(mask5.maskSprite);
 
+  karen1 = new Karen(SCENE_W / 4 + 100, 50, 90, 270, box21.boxSprite, box1.boxSprite); //creates the Karen enemy
+  karen1.create();
+  karens.add(karen1.karenSprite);
+  karen2 = new Karen(SCENE_W / 2 - 200, SCENE_H / 2 - 100, 270, 90, box1.boxSprite, box21.boxSprite);
+  karen2.create();
+  karens.add(karen2.karenSprite);
+  karen3 = new Karen(1100, 150, 0, 180, box4.boxSprite, box22.boxSprite);
+  karen3.create();
+  karens.add(karen3.karenSprite);
+  karen4 = new Karen(100, SCENE_H / 2 + 100, 0, 180, box24.boxSprite, box2.boxSprite);
+  karen4.create();
+  karens.add(karen4.karenSprite);
+  karen5 = new Karen(SCENE_W / 2 - 100, SCENE_H - 50, 180, 0, box2.boxSprite, box24.boxSprite);
+  karen5.create();
+  karens.add(karen5.karenSprite);
+  karen6 = new Karen(SCENE_W / 2 - 100, SCENE_H / 2 + 250, 270, 90, box23.boxSprite, box1.boxSprite);
+  karen6.create();
+  karens.add(karen6.karenSprite);
+  karen7 = new Karen(100, SCENE_H - 200, 90, 270, safeSpot, box23.boxSprite);
+  karen7.create();
+  karens.add(karen7.karenSprite);
+  karen8=new Karen(SCENE_W-400,SCENE_H/2-900,90,270,box21.boxSprite, box9.boxSprite);
+  karen8.create();
+  karens.add(karen8.karenSprite);
+  karen9=new Karen(SCENE_W-700,SCENE_H/2-900,90,270,box21.boxSprite,box9.boxSprite);
+  karen9.create();
+  karens.add(karen9.karenSprite);
+
   heartCounter = 3;
   state = 0;
   maskCounter = 0;
@@ -299,24 +318,31 @@ function setup() {
   h1 = 30;
   h2 = 30;
   h3 = 30;
+  
   offset=49000; //offset for the timers start(49 seconds because that is the length of time for the opening animation)
 }
 
 
 function draw() {
-  if(state===0){
+  if(state===0){ //I turned off the intro because it caused a ton of bugs in my code that I couldn't squash before the presenation :(
    intro(); //does intro animation
+   
+  //  introMusic.loop();
   }
   else if(state===1){
     background(instructions); //displays instructions
+    // introMusic.stop();
+    // backgroundTheme.play();
+    // backgroundTheme.loop();
   }
   else if (state === 2) { //the actual gameplay
+    background(backgroundImg2);
+    // backgroundTheme.loop();
     camera.position.x = userSprite.position.x; //sets the cameras position to that of the user
     camera.position.y = userSprite.position.y;
-    background(backgroundImg2);
     timeStart = millis()-offset; //starts timer
-    magaMove();
     karenMove();
+    magaMove();
     userMove();
     collision();
     doColorPuzzle();
@@ -328,7 +354,7 @@ function draw() {
     scoreboard();
   }
   else if (state === 3) {//if the game is lost
-    loseConition();
+    loseCondition();
   }
   else if (state === 4) {//if the game is won
     winCondition();
@@ -336,6 +362,7 @@ function draw() {
 }
 
 function winCondition(){ //dictates the display screen if you win the game
+  clearScreen();
   camera.off();
   fill(255);
   rect(0, 0, width, height);
@@ -352,6 +379,7 @@ function winCondition(){ //dictates the display screen if you win the game
 }
 
 function loseCondition(){//dictates the display screen if you win the game
+  clearScreen();
   camera.off();
   fill(255);
   rect(0, 0, width, height);
@@ -371,7 +399,7 @@ function intro(){//does the entire intro animation sequence
   timer1=millis();//starts a function level timer
   background(backgroundImg1);
   textFont(myFont);
-  if(timer1/1000<46){
+  if(timer1/1000<43){
   fill(255,0,0);
   textSize(16);
   text("press ENTER to skip intro",width/2+200,80);
@@ -396,7 +424,7 @@ function intro(){//does the entire intro animation sequence
   }
   if(timer1/1000>9 && timer1/1000<13){
     drawSprite(messageR);
-    text("we can't visit your\nparents without them,\nwe'd risk exposing\nthem...",width/2-85,height/2-150);
+    text("we can't visit your\nparents without them\nwe'd risk exposing\nthem...",width/2-85,height/2-150);
   }
   if(timer1/1000>13 && timer1/1000<16){
     drawSprite(messageL);
@@ -452,8 +480,13 @@ function keyPressed(){
     messageR.remove();
     messageL.remove();
     state=1;
+    // introMusic.play();
   }
   else if(keyCode===ENTER && state===1){//advances state from instructions to game
+    // backgroundTheme.play();
+    carSprite.remove();
+    messageR.remove();
+    messageL.remove();
     state=2;
   }
 }
@@ -510,6 +543,8 @@ function karenMove() {//calls the karen move() functions
   karen5.move();
   karen6.move();
   karen7.move();
+  karen8.move();
+  karen9.move();
 }
 
 function magaMove() {//calls the maga move() functions
@@ -517,6 +552,9 @@ function magaMove() {//calls the maga move() functions
   maga2.move();
   maga3.move();
   maga4.move();
+  maga5.move();
+  maga6.move();
+  maga7.move();
 }
 
 function userMove() {
@@ -541,15 +579,19 @@ function userMove() {
 function doMovePuzzle() {//details the collision interaction between the movers and sliders
   if (slider1.sliderSprite.collide(mover1.moverSprite) === true) {
     slider1.sliderSprite.remove();
+    mover1.moverSprite.addImage(recycleFull);
   }
   if (slider2.sliderSprite.collide(mover2.moverSprite) === true) {
     slider2.sliderSprite.remove();
+    mover2.moverSprite.addImage(recycleFull);
   }
   if (slider3.sliderSprite.collide(mover3.moverSprite) === true) {
     slider3.sliderSprite.remove();
+    mover3.moverSprite.addImage(recycleFull);
   }
   if (slider4.sliderSprite.collide(mover4.moverSprite) === true) {
     slider4.sliderSprite.remove();
+    mover4.moverSprite.addImage(recycleFull);
     mask5.maskSprite.visible = true;//after the puzzle is completed, the 5th masks appears
   }
 }
@@ -558,6 +600,7 @@ function loseLife() {
   if (userSprite.collide(karens) || userSprite.collide(magas)) {//if the user collides with maga or karen, they are sent back to the spawn point
     userSprite.position.x = safeSpot.position.x;
     userSprite.position.y = safeSpot.position.y;
+    userSprite.addImage(user);
     heartCounter--;//and a heart is taken away
     if (heartCounter === 2) {//removes the hearts from the top right display
       h3 = 0;
@@ -591,58 +634,49 @@ function collision() {
 
 function removeMasks() {
   if (userSprite.overlap(mask1.maskSprite)) { //if user collides with a mask
-    if (maskCounter === 0) {
       userSprite.addImage(masked);//if this is the first mask, the user image changes from unmasked to masked
-    }
     mask1.maskSprite.remove();//removes the mask from  play
     f1=0;//removes the mask from the top right display
     maskCounter++;
   }
   if (userSprite.overlap(mask2.maskSprite)) {
-    if (maskCounter === 0) {
       userSprite.addImage(masked);
-    }
     mask2.maskSprite.remove();
     f2=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask3.maskSprite)) {
-    if (maskCounter === 0) {
+   
       userSprite.addImage(masked);
-    }
+    
     mask3.maskSprite.remove();
     f3=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask4.maskSprite)) {
-    if (maskCounter === 0) {
+   
       userSprite.addImage(masked);
-    }
+    
     mask4.maskSprite.remove();
     f4=0;
     maskCounter++;
   }
   if (userSprite.overlap(mask5.maskSprite)) {
-    if (maskCounter === 0) {
+    
       userSprite.addImage(masked);
-    }
+    
     mask5.maskSprite.remove();
     f5=0;
     maskCounter++;
   }
 }
 
-function checkMasks() {//dictates the game ending conditions
+function checkMasks() {//dictates the game winning conditions
   if (mask1.maskSprite.removed === true && mask2.maskSprite.removed === true && mask3.maskSprite.removed === true && mask4.maskSprite.removed === true && mask5.maskSprite.removed === true) { //if all masks are gone then clear the screen
     clearScreen();
-    if (heartCounter > 0) {//if there are lives left then you are taken to the win condition screen
-      newCases = getNewCases(data);
-      state = 4;
-    }
-    else { //if there are no lives left then you are taken to the lose condition screen
-      newCases = getNewCases(data);
-      state = 3;
-    }
+    newCases = getNewCases(data);
+    state = 4;
+    
   }
 }
 
@@ -657,7 +691,6 @@ function clearScreen() { //gets rid of everything on the screen
   movers.removeSprites();
   safeSpot.remove();
   userSprite.remove();
-  state = 3;
 }
 
 function doColorPuzzle() {

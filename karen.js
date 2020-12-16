@@ -7,12 +7,13 @@ class Karen{
         this.d2=d2;
         this.upper=upper;
         this.lower=lower;
+        this.speed=random(2,3.5);
     }
     create(){
         this.karenSprite=createSprite(this.x,this.y);
         this.karenSprite.addImage(this.image);
         this.karenSprite.setCollider("circle",0,0,25);
-        this.karenSprite.setSpeed(2.5,this.d1);
+        this.karenSprite.setSpeed(this.speed,this.d1);
         return(this.karenSprite);
     }
     move(){

@@ -3,8 +3,8 @@ class Maga{
         this.x=x;
         this.y=y;
         this.image=maga;
-        this.attraction=0.5;
-        this.mSpeed=2.4;
+        this.attraction=random(0.3,0.9);
+        this.mSpeed=random(2.2,3);
     }
 
     create(){
